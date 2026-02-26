@@ -37,33 +37,41 @@ code .
 
 ---
 
-## 2) Open two terminals in VS Code
+## 2) Database Setup (PostgreSQL)
 
-In VS Code:
-- `Terminal` → `New Terminal` (Backend)
-- `Terminal` → create a second terminal (Frontend)
+Open PostgreSQL (via `psql` CLI or pgAdmin) and create a database and user.
 
-You will run **backend** in one terminal and **frontend** in the other.
+Example commands (psql):
+
+```sql
+CREATE DATABASE parc_db;
+CREATE USER obes_user WITH PASSWORD 'parc@123456';
+GRANT ALL PRIVILEGES ON DATABASE parc_db TO parc_user;
+```
+
+Keep these values ready for your environment variables:
+
+- DB name  
+- DB user  
+- DB password  
+- DB host (usually `localhost`)  
+- DB port (usually `5432`)
 
 ---
 
-## 3) Backend (Django) setup & run
+## 3) Backend (Django) Setup — Terminal 1
 
-### 3.1 Go to backend folder
+Open Terminal 1 in VS Code.
+
+### 3.1 Go to the backend directory
 
 ```bash
 cd backend
 ```
 
-### 3.2 Create and activate a virtual environment
+### 3.2 Create and activate the virtual environment
 
-**Windows (PowerShell):**
-```bash
-python -m venv venv
-.\venv\Scripts\Activate.ps1
-```
-
-**Windows (CMD):**
+**Windows (PowerShell / CMD):**
 ```bash
 python -m venv venv
 venv\Scripts\activate
@@ -75,57 +83,40 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-> If PowerShell blocks activation, run PowerShell as admin and execute:
-> ```bash
-> Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-> ```
-
-### 3.3 Install backend dependencies
+### 3.3 Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3.4 Configure environment variables (IMPORTANT)
+### 3.4 Configure Environment Variables (IMPORTANT)
 
-Most Django + Postgres projects require environment variables (DB credentials, secret key, etc.).
+This project uses environment variables to keep sensitive credentials secure. You must create a local `.env` file before running the server.
 
-1. Check if there is a file like:
-   - `.env.example`
-   - `.env.sample`
-   - `backend/.env.example`
+Copy the provided template file:
 
-2. Create a `.env` file (commonly in `backend/`).
-
-Example (adjust names/values to match your project settings):
-```env
-DJANGO_SECRET_KEY=change-me
-DJANGO_DEBUG=True
-
-DB_NAME=parc_db
-DB_USER=postgres
-DB_PASSWORD=your_password
-DB_HOST=127.0.0.1
-DB_PORT=5432
+**Windows:**
+```dos
+copy .env.example .env
 ```
 
-> If your backend uses different variable names, update them to match `backend/settings.py`.
-
-### 3.5 Create a PostgreSQL database
-
-Using psql (example):
-```sql
-CREATE DATABASE parc_db;
+**macOS / Linux:**
+```bash
+cp .env.example .env
 ```
 
-Or create it from pgAdmin.
+Open the newly created `.env` file in VS Code and update it with your local PostgreSQL credentials and a secure Django Secret Key.
 
-### 3.6 Run migrations
+### 3.5 Run migrations
+
+Generate the database tables:
 
 ```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
+
+---
 
 ### 3.7 Create a Django admin user (recommended)
 
@@ -161,12 +152,12 @@ cd frontend
 npm install
 ```
 
-### 4.3 Configure frontend environment variables (if required)
-
-Many Vite/React apps need an API base URL.
+### 4.3 Configure frontend environment variables
 
 Look for:
-- `frontend/.env.example`
+- `frontend/.env.local.example`
+
+Then create a `.env.local` file in the frontend folder and copy the contents of the `.env.local.example` file 
 
 Common Vite pattern:
 ```env
