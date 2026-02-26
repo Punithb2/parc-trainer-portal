@@ -175,6 +175,10 @@ Frontend usually runs at:
 
 Open the link shown in the terminal.
 
+### 4.5 Login to the admin portal
+
+You can use the superuser credentials you created in the backend to go to the admin portal
+
 ---
 
 ## 5) Typical development workflow (VS Code)
